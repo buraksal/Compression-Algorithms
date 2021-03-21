@@ -41,7 +41,7 @@ public class HuffmanFrequencyChecker {
 			}
 		}
 	}
-	
+	/*
 	public static void main(String[] args) {
 		String str = "Let's see the simple code to convert char to int in java.";
 		HuffmanFrequencyChecker freqTable = new HuffmanFrequencyChecker();
@@ -53,4 +53,5 @@ public class HuffmanFrequencyChecker {
 			System.out.println("Char: " + dataTable[i] + " with frequency: " +table[i]);
 		}
 	}
+	*/
 }

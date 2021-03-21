@@ -1,7 +1,7 @@
 
 public class PriorityQueue{
 	
-	private int[] frequencies;
+	private HuffmanTree.HuffmanTreeNode[] nodes;
 	private int size;
 	private int elementNum;
 	
@@ -9,61 +9,91 @@ public class PriorityQueue{
     public PriorityQueue() {
     	this.size = 1;
     	this.elementNum = 0;
-    	this.frequencies = new int[this.size];
+    	this.nodes = new HuffmanTree.HuffmanTreeNode[this.size];
     }
     
     public PriorityQueue(int size) {
     	this.size = size;
-    	frequencies = new int[this.size];
+    	nodes = new HuffmanTree.HuffmanTreeNode[this.size];
     	elementNum = 0;
     }
     
+    public void insert(HuffmanTree.HuffmanTreeNode node) {
+    	int cnt;
+    	if(this.elementNum < size) {
+    		if(this.elementNum == 0) {
+    			nodes[elementNum] = node;
+    			elementNum++;
+    			return;
+    		}
+    		for(cnt = elementNum - 1;  cnt >= 0; cnt--) {
+    			if(node.freq < nodes[cnt].freq)
+    				nodes[cnt+1] = nodes[cnt];
+    			else
+    				break;
+    		}
+    		cnt++;
+			nodes[cnt] = node;
+			elementNum++;
+    	}
+    }
+    
+    /*
     public void insert(int value) {
     	int cnt;
     	if (this.elementNum < size) {
     		if(this.elementNum == 0) {
-    			frequencies[elementNum] = value;
+    			datas[elementNum] = value;
     			elementNum++;
     			return;
     		}
 			for(cnt = elementNum - 1;  cnt >= 0; cnt--) {
-				if(value >= frequencies[cnt])
-					frequencies[cnt+1] = frequencies[cnt];
+				if(value >= datas[cnt])
+					datas[cnt+1] = datas[cnt];
 				else
 					break;
 			}
 			cnt++;
-			frequencies[cnt] = value;
+			datas[cnt] = value;
 			elementNum++;
     	} else {
     		System.out.println("Already Full");
     	}
     }
-    
-    public int remove() {
-    	if(this.elementNum == 0) {
-    		System.out.println("Already Empty");
-    		return -1;
-    	}else {
-    		elementNum--;
-    		return frequencies[elementNum];
-    	}
+    */  
+
+    public void remove() {
+    	nodes[elementNum] = null;
+		elementNum--;
     }
     
-    public int peek() {
+    public void removeFirst(){
+    	for(int i = 0; i < size - 1; i++) {
+    		nodes[i] = nodes[i+1];
+    	}
+    	elementNum--;
+    	nodes[elementNum] = null;
+    }
+    
+    public HuffmanTree.HuffmanTreeNode peek() {
     	if(elementNum > 0) {
-    		return frequencies[elementNum - 1];
+    		return nodes[0];
     	} else {
     		System.out.println("Empty Queue!");
-    		return -1;
+    		return null;
     	}
     	
+    }
+    
+    public int getElementNum() {
+    	return elementNum;
     }
 
     public static void main(String[] args) {
     	PriorityQueue priorityQueue = new PriorityQueue(10);
     	
     	System.out.println("Last item: " + priorityQueue.peek());
+    	/*
         priorityQueue.insert(77);
         priorityQueue.insert(55);
         priorityQueue.insert(66);
@@ -85,8 +115,9 @@ public class PriorityQueue{
         System.out.print(priorityQueue.remove()+" ");
         System.out.print(priorityQueue.remove()+" ");
         System.out.print(priorityQueue.remove()+" ");
-        
+       
         priorityQueue.insert(6);
+         */
 	}
 	
 }
