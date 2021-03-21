@@ -49,15 +49,27 @@ public class PriorityQueue{
     		return frequencies[elementNum];
     	}
     }
-    /*
+    
+    public int peek() {
+    	if(elementNum > 0) {
+    		return frequencies[elementNum - 1];
+    	} else {
+    		System.out.println("Empty Queue!");
+    		return -1;
+    	}
+    	
+    }
+
     public static void main(String[] args) {
-    	PriorityQueue priorityQueue = new PriorityQueue(10); // Priority Queue holds 10 elements
-        
-        priorityQueue.insert(81);
-        priorityQueue.insert(72);
-        priorityQueue.insert(52);
+    	PriorityQueue priorityQueue = new PriorityQueue(10);
+    	
+    	System.out.println("Last item: " + priorityQueue.peek());
+        priorityQueue.insert(77);
+        priorityQueue.insert(55);
+        priorityQueue.insert(66);
         priorityQueue.insert(61);
         priorityQueue.insert(817);
+        System.out.println("Last item: " + priorityQueue.peek());
         priorityQueue.insert(727);
         priorityQueue.insert(572);
         priorityQueue.insert(617);
@@ -76,5 +88,5 @@ public class PriorityQueue{
         
         priorityQueue.insert(6);
 	}
-	*/
+	
 }
