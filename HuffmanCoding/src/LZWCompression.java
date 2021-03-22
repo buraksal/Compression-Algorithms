@@ -1,6 +1,8 @@
 import java.util.*;
 //Credit https://rosettacode.org/wiki/LZW_compression#Java
 public class LZWCompression {
+	
+	
     /** Compress a string to a list of output symbols. */
     public static List<Integer> compress(String uncompressed) {
         // Build the dictionary.
