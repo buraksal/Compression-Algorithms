@@ -1,3 +1,4 @@
+package Compressions;
 
 public class PriorityQueue{
 	

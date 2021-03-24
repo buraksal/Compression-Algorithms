@@ -1,3 +1,4 @@
+package Compressions;
 import java.util.*;
 //Credit https://rosettacode.org/wiki/LZW_compression#Java
 public class LZWCompression {

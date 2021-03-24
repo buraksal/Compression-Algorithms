@@ -1,17 +1,19 @@
-public class HuffmanFrequencyChecker {
+package Compressions;
+public class FrequencyChecker {
 	
 	private int[] tmpTable = new int[255];
 	public int[] freqTable;
 	public char[] dataTable;
 	
 	//Default Constructor
-	public HuffmanFrequencyChecker() {
+	public FrequencyChecker() {
 		
 	}
 	
 	public void checkFrequency(String str) {
 		int asciiVal;
 		for(int i = 0; i < str.length(); i++) {
+			System.out.println(str.charAt(i));
 			asciiVal = str.charAt(i);
 			tmpTable[asciiVal]++;
 		}

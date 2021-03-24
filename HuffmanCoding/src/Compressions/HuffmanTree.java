@@ -1,7 +1,8 @@
+package Compressions;
 
 public class HuffmanTree {
 	
-	static class HuffmanTreeNode {
+	public static class HuffmanTreeNode {
 		int freq;
 		char data;
 		String code;
@@ -45,8 +46,8 @@ public class HuffmanTree {
 	}
 
 
-	private static HuffmanTreeNode createTree(String str) {	
-		HuffmanFrequencyChecker hfc = new HuffmanFrequencyChecker();
+	public static HuffmanTreeNode createTree(String str) {	
+		FrequencyChecker hfc = new FrequencyChecker();
 		hfc.checkFrequency(str);
 		PriorityQueue pq = new PriorityQueue(hfc.dataTable.length);
 		for(int i = 0; i < hfc.dataTable.length; i++) {
@@ -77,7 +78,9 @@ public class HuffmanTree {
 	
 	
 	public static void main(String[] args) {
-		String str = "Eerie eyes seen near lake.";
+		String str = "asdasdfnbsafcwemrwecwecfhwemgceyERMCEBNVFGEDSWMTYRWatghwjen "
+				+ "sbahymtaWFAEHAYTCTEaeeem<whrcWGHMCAREHYGMACHQMGTCQEYERGRHECTQEW"
+				+ "FHAYTCTEaeeem<whrcWGHMCAREHYMCAREHYGMACHQMGTCQEYERGRHECTQEWFH";
 		HuffmanTreeNode root = createTree(str);
 		createCode(root,"");
 		String encodedStr = encode(root, str);
@@ -86,38 +89,35 @@ public class HuffmanTree {
 		System.out.println("Decoding: " + decodedStr);
 	}
 
-	private static String decode(HuffmanTreeNode root, String encodedStr) {
+	public static String decode(HuffmanTreeNode root, String encodedStr) {
 		String str = "";
 		HuffmanTreeNode newNode = new HuffmanTreeNode();
 		newNode = root;
 		for(int i = 0; i < encodedStr.length(); i++) {
+			if(newNode.right == null && newNode.left == null) {
+				str += newNode.data;
+				newNode = root;
+			}
+			
 			if(encodedStr.charAt(i) == '0' && newNode.left != null) {
 				newNode = newNode.left;
 			}
 			if(encodedStr.charAt(i) == '1' && newNode.right != null) {
 				newNode = newNode.right;
 			}
-			
-			if(newNode.right == null && newNode.left == null) {
-				str += newNode.data;
-				newNode = root;
-			}
-			
 		}
 		return str;
 	}
 
-	private static String encode(HuffmanTreeNode root, String str) {
+	public static String encode(HuffmanTreeNode root, String str) {
 
 		HuffmanTreeNode newNode = new HuffmanTreeNode();
 		String encodedStr = "";
 		for(int i = 0; i < str.length(); i++) {
 			newNode = root.findNode(root, str.charAt(i));
 			encodedStr += newNode.code;
-
 		}
 		return encodedStr;
 	}
-
 	
 }
