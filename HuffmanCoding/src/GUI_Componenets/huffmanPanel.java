@@ -118,7 +118,6 @@ public class huffmanPanel extends JPanel{
 			root = HuffmanTree.createTree(data);
 			HuffmanTree.createCode(root, "");
 			String encodedStr = HuffmanTree.encode(root, data);
-			System.out.println("Encoded str: " + encodedStr);
 			try {
 				writer.write(encodedStr+"\n");
 	        	writer.close();
@@ -172,7 +171,6 @@ public class huffmanPanel extends JPanel{
 
 		private void writeToFile(File file, String data, FileWriter writer) {
 			String decodedStr = HuffmanTree.decode(root, data);
-			System.out.println("Decoded str: " + decodedStr + "\n Data: " + data);
 			try {
 				writer.write(decodedStr+ "\n");
 	        	writer.close();

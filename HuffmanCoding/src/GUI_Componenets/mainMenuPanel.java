@@ -72,11 +72,9 @@ public class mainMenuPanel extends JPanel{
 			Component component = (Component) e.getSource();
 			currentFrame = (JFrame) SwingUtilities.getRoot(component);
 			if (e.getSource() == lzwButton){
-				System.out.println("LZW Buton");
 				new lzwPanel(currentFrame);
 				return;
 			} else if(e.getSource() == huffmanButton);{
-				System.out.println("HuffmanButton");
 				new huffmanPanel(currentFrame);
 			}
 				

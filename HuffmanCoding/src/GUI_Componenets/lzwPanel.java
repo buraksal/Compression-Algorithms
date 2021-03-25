@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import Compressions.HuffmanTree;
 import Compressions.LZWCompression;
 
 public class lzwPanel extends JPanel{
@@ -87,8 +85,13 @@ public class lzwPanel extends JPanel{
             int option = fileChooser.showOpenDialog(currentFrame);
             if(option == JFileChooser.APPROVE_OPTION){
                File file = fileChooser.getSelectedFile();
+               /*String extention = getExtention(file);
+               String name = setPathExtention(file);
+               if(extention != "txt") {
+            	   file.renameTo(new File(name));
+               }*/
                try {
-				compressFile(file);
+            	   compressFile(file);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -100,12 +103,48 @@ public class lzwPanel extends JPanel{
             
             repaint();
          }
+		
+		private void changeFile(File file) throws IOException {
+			//String str = setPathExtention(file);
+			FileWriter newFile = new FileWriter(file.getPath(), true);
+			newFile.append("\nabdulcabbar");
+		}
+
+		private File changeExtension(File f) {
+			  int i = f.getName().lastIndexOf('.');
+			  String name = f.getName().substring(0,i);
+			  return new File(f.getParent(), "lzwCompression_" + name + ".txt");
+		}
+		
+		private String getFileName(File file) {
+			String name = file.getName();
+			int loc = name.lastIndexOf('.');
+			name = name.substring(0, loc);
+			return name;
+		}
+
+		private String getExtention(File file) {
+			String fileExtention = file.getName();
+			int loc = fileExtention.lastIndexOf('.');
+			fileExtention = fileExtention.substring(loc + 1);
+			return fileExtention;
+		}
+
+		private String setPathExtention(File file) {
+			String str = getFileName(file);
+			String path = file.getPath();
+			int loc = path.lastIndexOf('\\');
+			path=path.substring(0,loc+1);
+			String str2 = path+"lzwCompression_" + str + ".txt";
+			return str2;
+		}
 
 		private void compressFile(File file) throws IOException {
 			LZWCompression lzw = new LZWCompression();
 			Scanner reader = new Scanner(file);
 			reader.useDelimiter("\\Z");
-			String str = setFileName(file);
+			String str = setPathExtention(file);
+			
 			FileWriter writer = new FileWriter(str, false);
 			writer.append("");
 			writer = new FileWriter(str, true);
@@ -114,16 +153,13 @@ public class lzwPanel extends JPanel{
 			data = reader.next();
 			compressed = lzw.compress(data);
 			writeToFile(compressed, file, writer);
-			/*while(reader.hasNextLine()) {
-				data = reader.nextLine();
-				compressed = lzw.compress(data);
-				writeToFile(compressed, file, writer);
-			}*/
+			
 		}
+
+		
 
 		private void writeToFile(List<Integer> compressed, File file, FileWriter writer) {
 			String str = "lzwCompression_"+file.getName();
-			
 			try {
 		    	  writer.write(compressed.toString());
 		    	  writer.close();
@@ -172,10 +208,8 @@ public class lzwPanel extends JPanel{
 			String str = setFileName(file);
 			FileWriter writer = new FileWriter(str, false);
 			writer.append("");
-			writer = new FileWriter(str, true);
-			
+			writer = new FileWriter(str, true);		
 			String data;
-			
 			data = reader.next();
 			String decompressed = lzw.decompress(compressed);
 			writeToFile(file, decompressed, writer);

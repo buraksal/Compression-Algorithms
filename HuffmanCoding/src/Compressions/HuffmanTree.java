@@ -35,7 +35,7 @@ public class HuffmanTree {
 
 	public static void createCode(HuffmanTreeNode root, String code) {
 		if (root.left == null && root.right == null) {
-            System.out.println(root.data + ":" + code);
+            //System.out.println(root.data + ":" + code);
             root.code = code;
             return;
 		}
