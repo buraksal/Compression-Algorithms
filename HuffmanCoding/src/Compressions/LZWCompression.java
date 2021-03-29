@@ -3,8 +3,7 @@ import java.util.*;
 //Credit https://rosettacode.org/wiki/LZW_compression#Java
 public class LZWCompression {
 	
-	
-    /** Compress a string to a list of output symbols. */
+
     public static List<Integer> compress(String uncompressed) {
         // Build the dictionary.
         int dictSize = 256;
@@ -25,16 +24,19 @@ public class LZWCompression {
                 w = "" + c;
             }
         }
- 
-        // Output the code for w.
+
         if (!w.equals(""))
-            result.add(dictionary.get(w));
+            result.add(dictionary.get(w));/*
+        for(int d = 0; d < result.size(); d++) {
+        	if (result.get(d) == null) {
+        		result.set(d, 0);
+        	}
+        }*/
         return result;
     }
  
-    /** Decompress a list of output ks to a string. */
     public static String decompress(List<Integer> compressed) {
-        // Build the dictionary.
+
         int dictSize = 256;
         Map<Integer,String> dictionary = new HashMap<Integer,String>();
         for (int i = 0; i < 256; i++)
@@ -52,8 +54,7 @@ public class LZWCompression {
                 throw new IllegalArgumentException("Bad compressed k: " + k);
  
             result.append(entry);
- 
-            // Add w+entry[0] to the dictionary.
+
             dictionary.put(dictSize++, w + entry.charAt(0));
  
             w = entry;

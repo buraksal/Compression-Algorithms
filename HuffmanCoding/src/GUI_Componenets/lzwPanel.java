@@ -4,12 +4,19 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -21,6 +28,8 @@ import Compressions.LZWCompression;
 
 public class lzwPanel extends JPanel{
 	
+	ArrayList<String> picExtentions = new ArrayList<>(Arrays.asList("png", "jpg", "bmp", "gif", "jpeg"));
+	
 	JFrame currentFrame;
 	
 	JLabel lzwTitle;
@@ -28,8 +37,13 @@ public class lzwPanel extends JPanel{
 	JButton uploadFile;
 	JButton downloadFile;
 	JButton backButton;
-
+	
+	String extention;
+	String abdul;
+	
 	List<Integer> compressed;
+	
+	byte[] bytes;
 	
 	final static int HEIGHT = 540;
 	final static int WIDTH = 960;
@@ -85,35 +99,66 @@ public class lzwPanel extends JPanel{
             int option = fileChooser.showOpenDialog(currentFrame);
             if(option == JFileChooser.APPROVE_OPTION){
                File file = fileChooser.getSelectedFile();
-               /*String extention = getExtention(file);
-               String name = setPathExtention(file);
-               if(extention != "txt") {
-            	   file.renameTo(new File(name));
-               }*/
+               setExtention(file);
                try {
-            	   compressFile(file);
+            	   if(extention.equals("txt")) {
+            		   System.out.println("here-1");
+            		   compressFile(file);
+            	   }            		   
+            	   else {
+            		   System.out.println("here-1.5");
+            		   compressOtherExtention(file);
+            	   }
+            		   
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-               uploadFile.setText("Folder Selected: " + file.getName());
+                uploadFile.setText("Folder Selected: " + file.getName());
             }else{
             	uploadFile.setText("Open command canceled");
             }
-            
-            
+
             repaint();
          }
 		
-		private void changeFile(File file) throws IOException {
-			//String str = setPathExtention(file);
-			FileWriter newFile = new FileWriter(file.getPath(), true);
-			newFile.append("\nabdulcabbar");
+		private void compressOtherExtention(File file) throws IOException {
+			if(picExtentions.contains(extention)) {
+				byte[] data2 = new byte[(int) file.length()];
+			    FileInputStream in = new FileInputStream(file);
+			    in.read(data2);
+			    in.close();
+				for(int i= 0; i< data2.length;i++){
+				        System.out.print("original = " + data2[i]);
+				}
+				bytes = data2;
+				String str = imageToText(file);
+				LZWCompression lzw = new LZWCompression();
+				String fileName = setPathExtention(file);
+				FileWriter writer = new FileWriter(fileName, true);
+				writer.append("");
+				//writer = new FileWriter(str, true);
+				compressed = lzw.compress(str);
+				writeToFile(compressed, file, writer);
+			}
+			
 		}
 
-		private File changeExtension(File f) {
-			  int i = f.getName().lastIndexOf('.');
-			  String name = f.getName().substring(0,i);
-			  return new File(f.getParent(), "lzwCompression_" + name + ".txt");
+		private String imageToText(File file) throws IOException {
+			String str = "";
+			BufferedImage image = ImageIO.read(file);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			if(extention.equals("png"))
+				ImageIO.write(image, "png", bos);
+			if(extention.equals("jpg"))
+				ImageIO.write(image, "jpg", bos);
+			if(extention.equals("gif"))
+				ImageIO.write(image, "gif", bos);
+			//bytes = bos.toByteArray();
+		    //str = new String(bytes);
+			str = Arrays.toString(bytes);
+			abdul = str;
+		    //System.out.println(str);
+			return str;
 		}
 		
 		private String getFileName(File file) {
@@ -123,11 +168,11 @@ public class lzwPanel extends JPanel{
 			return name;
 		}
 
-		private String getExtention(File file) {
+		private void setExtention(File file) {
 			String fileExtention = file.getName();
 			int loc = fileExtention.lastIndexOf('.');
 			fileExtention = fileExtention.substring(loc + 1);
-			return fileExtention;
+			extention = fileExtention;
 		}
 
 		private String setPathExtention(File file) {
@@ -144,38 +189,24 @@ public class lzwPanel extends JPanel{
 			Scanner reader = new Scanner(file);
 			reader.useDelimiter("\\Z");
 			String str = setPathExtention(file);
-			
-			FileWriter writer = new FileWriter(str, false);
+			FileWriter writer = new FileWriter(str, true);
 			writer.append("");
-			writer = new FileWriter(str, true);
-			
+			//writer = new FileWriter(str, true);
+			System.out.println("here0");
 			String data;
 			data = reader.next();
 			compressed = lzw.compress(data);
 			writeToFile(compressed, file, writer);
-			
 		}
 
-		
-
 		private void writeToFile(List<Integer> compressed, File file, FileWriter writer) {
-			String str = "lzwCompression_"+file.getName();
 			try {
-		    	  writer.write(compressed.toString());
+		    	  writer.write(compressed.toString()); 
 		    	  writer.close();
 			} catch (IOException e) {
 			      System.out.println("An error occurred.");
 			      e.printStackTrace();
 			}
-		}
-		
-		
-		private String setFileName(File file) {
-			String str2 = file.getPath();
-			int loc = str2.lastIndexOf('\\');
-			str2=str2.substring(0,loc+1);
-			String str = str2+"lzwCompression_"+file.getName();
-			return str;
 		}
 	}
 	
@@ -189,7 +220,14 @@ public class lzwPanel extends JPanel{
             if(option == JFileChooser.APPROVE_OPTION){
                File file = fileChooser.getSelectedFile();
                try {
-            	   decompressFile(file);
+            	   
+            	   if(!extention.equals("txt")) {
+            		   decompressOtherExtentions(file);
+            		   //changeFileExtention(file);
+            	   } else {
+            		   decompressFile(file);
+            	   }
+            	   
                } catch (IOException e1) {
             	   e1.printStackTrace();
                }
@@ -200,6 +238,31 @@ public class lzwPanel extends JPanel{
 
             repaint();
          }
+
+		private void decompressOtherExtentions(File file) throws IOException {
+
+			LZWCompression lzw = new LZWCompression();
+			String decompressed = lzw.decompress(compressed);
+			
+			String[] input = decompressed.replaceAll("[\\[\\]]", "").split(", ");
+			byte[] output = new byte[decompressed.length()];
+			
+			for (int i = 0; i < input.length; i++) {
+		        output[i] = Byte.parseByte(input[i]);
+		    }
+
+		    if(picExtentions.contains(extention)) {
+		    	ByteArrayInputStream bis = new ByteArrayInputStream(output);
+			    BufferedImage image = ImageIO.read(bis);
+			    String currentPath = setFileName(file);
+		    	byteToImage(image, currentPath);
+		    }
+		    
+		}
+
+		private void byteToImage(BufferedImage image, String currentPath) throws IOException {
+			ImageIO.write(image, extention,  new File(currentPath) );
+		}
 
 		private void decompressFile(File file) throws IOException {
 			LZWCompression lzw = new LZWCompression();
@@ -216,27 +279,24 @@ public class lzwPanel extends JPanel{
 		}
 
 		private void writeToFile(File file, String data, FileWriter writer) {
-			String str = "lzwCompression_"+file.getName();
-			
 			try {
-		    	  writer.write(data.toString());
-		    	  writer.close();
+				writer.write(data.toString());
+		    	writer.close();
 			} catch (IOException e) {
-			      System.out.println("An error occurred.");
-			      e.printStackTrace();
+			    System.out.println("An error occurred.");
+			    e.printStackTrace();
 			}
 		}
 		
 		private String setFileName(File file) {
-			String str1 = file.getName();
-			int loc1 = str1.indexOf('_');
-			str1 = str1.substring(loc1+1);
-			String str2 = file.getPath();
-			int loc2 = str2.lastIndexOf('\\');
-			str2=str2.substring(0,loc2+1);
-			String str = str2+"lzwDecompression_"+str1;
-			return str;
+			String fileName = file.getAbsolutePath();
+			int loc = fileName.lastIndexOf('.');
+			fileName = fileName.substring(0, loc);
+			fileName += ("."+ extention);
+			fileName = fileName.replace("Compression", "Decompression");
+			return fileName;
 		}
+
 	}
 	class backButtonListener implements ActionListener {
 		@Override
