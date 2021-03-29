@@ -39,7 +39,6 @@ public class lzwPanel extends JPanel{
 	JButton backButton;
 	
 	String extention;
-	String abdul;
 	
 	List<Integer> compressed;
 	
@@ -127,9 +126,6 @@ public class lzwPanel extends JPanel{
 			    FileInputStream in = new FileInputStream(file);
 			    in.read(data2);
 			    in.close();
-				for(int i= 0; i< data2.length;i++){
-				        System.out.print("original = " + data2[i]);
-				}
 				bytes = data2;
 				String str = imageToText(file);
 				LZWCompression lzw = new LZWCompression();
@@ -145,19 +141,7 @@ public class lzwPanel extends JPanel{
 
 		private String imageToText(File file) throws IOException {
 			String str = "";
-			BufferedImage image = ImageIO.read(file);
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			if(extention.equals("png"))
-				ImageIO.write(image, "png", bos);
-			if(extention.equals("jpg"))
-				ImageIO.write(image, "jpg", bos);
-			if(extention.equals("gif"))
-				ImageIO.write(image, "gif", bos);
-			//bytes = bos.toByteArray();
-		    //str = new String(bytes);
 			str = Arrays.toString(bytes);
-			abdul = str;
-		    //System.out.println(str);
 			return str;
 		}
 		
@@ -220,7 +204,6 @@ public class lzwPanel extends JPanel{
             if(option == JFileChooser.APPROVE_OPTION){
                File file = fileChooser.getSelectedFile();
                try {
-            	   
             	   if(!extention.equals("txt")) {
             		   decompressOtherExtentions(file);
             		   //changeFileExtention(file);
@@ -255,13 +238,9 @@ public class lzwPanel extends JPanel{
 		    	ByteArrayInputStream bis = new ByteArrayInputStream(output);
 			    BufferedImage image = ImageIO.read(bis);
 			    String currentPath = setFileName(file);
-		    	byteToImage(image, currentPath);
+			    ImageIO.write(image, extention,  new File(currentPath) );
 		    }
 		    
-		}
-
-		private void byteToImage(BufferedImage image, String currentPath) throws IOException {
-			ImageIO.write(image, extention,  new File(currentPath) );
 		}
 
 		private void decompressFile(File file) throws IOException {

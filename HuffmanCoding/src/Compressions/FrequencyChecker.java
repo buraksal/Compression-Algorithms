@@ -13,7 +13,7 @@ public class FrequencyChecker {
 	public void checkFrequency(String str) {
 		int asciiVal;
 		for(int i = 0; i < str.length(); i++) {
-			System.out.println(str.charAt(i));
+			//System.out.println(str.charAt(i));
 			asciiVal = str.charAt(i);
 			tmpTable[asciiVal]++;
 		}

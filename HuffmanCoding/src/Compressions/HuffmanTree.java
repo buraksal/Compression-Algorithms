@@ -110,10 +110,12 @@ public class HuffmanTree {
 	}
 
 	public static String encode(HuffmanTreeNode root, String str) {
-
 		HuffmanTreeNode newNode = new HuffmanTreeNode();
 		String encodedStr = "";
 		for(int i = 0; i < str.length(); i++) {
+			if(i % 10000 == 0) {
+				System.out.println("Still going on i = " + i + "\tLength is: " + str.length());
+			}
 			newNode = root.findNode(root, str.charAt(i));
 			encodedStr += newNode.code;
 		}

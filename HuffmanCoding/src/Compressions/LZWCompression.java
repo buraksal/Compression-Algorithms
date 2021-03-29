@@ -1,11 +1,10 @@
 package Compressions;
 import java.util.*;
-//Credit https://rosettacode.org/wiki/LZW_compression#Java
+
 public class LZWCompression {
 	
 
     public static List<Integer> compress(String uncompressed) {
-        // Build the dictionary.
         int dictSize = 256;
         Map<String,Integer> dictionary = new HashMap<String,Integer>();
         for (int i = 0; i < 256; i++)
@@ -19,19 +18,14 @@ public class LZWCompression {
                 w = wc;
             else {
                 result.add(dictionary.get(w));
-                // Add wc to the dictionary.
                 dictionary.put(wc, dictSize++);
                 w = "" + c;
             }
         }
 
         if (!w.equals(""))
-            result.add(dictionary.get(w));/*
-        for(int d = 0; d < result.size(); d++) {
-        	if (result.get(d) == null) {
-        		result.set(d, 0);
-        	}
-        }*/
+            result.add(dictionary.get(w));
+
         return result;
     }
  
