@@ -1,5 +1,6 @@
 package GUI_Componenets;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -14,9 +15,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.Timer;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -29,13 +30,13 @@ import Compressions.HuffmanTree.HuffmanTreeNode;
 
 public class huffmanPanel extends JPanel{
 	
-	ArrayList<String> picExtentions = new ArrayList<>(Arrays.asList("png", "jpg", "bmp", "gif", "jpeg"));
+	ArrayList<String> picExtentions = new ArrayList<>(Arrays.asList("png", "jpg", "bmp", "gif", "jpeg", "mp4"));
 	
 	JFrame currentFrame;
 	
 	JLabel huffmanTitle;
-	JLabel compressionLabel;
-	JLabel decompressionLabel;
+	JLabel bgImage;
+	JLabel footer;
 	
 	JButton uploadFile;
 	JButton downloadFile;
@@ -59,6 +60,9 @@ public class huffmanPanel extends JPanel{
 	final int FONT_SIZE_ADJUSTMENT = 5;
 	final int COMPLABEL_LOCX = 650;
 	final int COMPLABEL_LOCY = 225;
+	final int SPEED = 500;
+	final int BUTTON_FONT_SIZE = 15;
+	final int FOOTER_LOCX = 800;
 	
 	public huffmanPanel(JFrame currentFrame) {
 		currentFrame.setContentPane(this);
@@ -72,35 +76,52 @@ public class huffmanPanel extends JPanel{
 		
 		huffmanTitle = new JLabel ("huffman Compression");
 		huffmanTitle.setFont(new Font("Delta Ray", Font.PLAIN, FONT_SIZE));
+		huffmanTitle.setForeground(Color.RED);
 		huffmanTitle.setBounds(DISTANCE_BETWEEN_BUTTONS/ SIZE_ADJUSTMENT_RATE, DISTANCE_BETWEEN_BUTTONS/ SIZE_ADJUSTMENT_RATE - 50, 
 				FONT_SIZE * (FONT_SIZE_ADJUSTMENT * SIZE_ADJUSTMENT_RATE), FONT_SIZE* FONT_SIZE_ADJUSTMENT);		
 		this.add(huffmanTitle);
 		
+		footer = new JLabel("by Burak SAL");
+		footer.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
+		footer.setForeground(Color.CYAN);
+		footer.setBounds(FOOTER_LOCX, (HEIGHT-DISTANCE_BETWEEN_BUTTONS) , BUTTON_WIDTH / 2, BUTTON_HEIGHT);
+		this.add(footer);
+		
 		uploadFile = new JButton("Select a File to Compress!");
 		uploadFile.setBounds((huffmanTitle.getX() + BUTTON_WIDTH) / 2, huffmanTitle.getY() - DISTANCE_BETWEEN_BUTTONS + (BUTTON_HEIGHT*SIZE_ADJUSTMENT_RATE)
 				, BUTTON_WIDTH, BUTTON_HEIGHT);
+		uploadFile.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
+		uploadFile.setForeground(Color.PINK);
 		uploadFile.addActionListener(new UploadButtonListener());
+		uploadFile.setOpaque(false);
+		uploadFile.setContentAreaFilled(false);
+		uploadFile.setBorderPainted(false);
 		this.add(uploadFile);
-		
-		compressionLabel = new JLabel("Compressing");
-		compressionLabel.setFont(new Font("Delta Ray", Font.PLAIN, FONT_SIZE / FONT_SIZE_ADJUSTMENT * 3));
-		compressionLabel.setBounds(COMPLABEL_LOCX, COMPLABEL_LOCY, LABEL_WIDTH * 3, LABEL_HEIGHT);
 		
 		downloadFile = new JButton("Select a File to Decompress!");
 		downloadFile.setBounds((huffmanTitle.getX() + BUTTON_WIDTH) / 2, huffmanTitle.getY()  + (BUTTON_HEIGHT*SIZE_ADJUSTMENT_RATE)
 				, BUTTON_WIDTH, BUTTON_HEIGHT);
+		downloadFile.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
+		downloadFile.setForeground(Color.PINK);
 		downloadFile.addActionListener(new DownloadButtonListener());
+		downloadFile.setOpaque(false);
+		downloadFile.setContentAreaFilled(false);
+		downloadFile.setBorderPainted(false);
 		this.add(downloadFile);
-		
-		decompressionLabel = new JLabel("Decompressing");
-		decompressionLabel.setFont(new Font("Delta Ray", Font.PLAIN, FONT_SIZE / FONT_SIZE_ADJUSTMENT * 3));
-		decompressionLabel.setBounds(COMPLABEL_LOCX, downloadFile.getY(), LABEL_WIDTH * 3, LABEL_HEIGHT);
-		//this.add(decompressionLabel);
 		
 		backButton = new JButton(" < Back");
 		backButton.setBounds(WIDTH - (BUTTON_WIDTH / 2), DISTANCE_BETWEEN_BUTTONS - BUTTON_HEIGHT, 100, 50);
+		backButton.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
+		backButton.setForeground(Color.PINK);
 		backButton.addActionListener(new backButtonListener());
+		backButton.setOpaque(false);
+		backButton.setContentAreaFilled(false);
+		backButton.setBorderPainted(false);
 		this.add(backButton);
+		
+		bgImage = new JLabel(new ImageIcon("C:\\Users\\Burak\\git\\HuffmanCoding\\HuffmanCoding\\resources\\CompressedScrew.jpg"));
+		bgImage.setBounds(0,0, WIDTH,HEIGHT);
+		this.add(bgImage);
 		
 		repaint();
 	}
@@ -111,11 +132,10 @@ public class huffmanPanel extends JPanel{
 			JFileChooser fileChooser = new JFileChooser();
             Component component = (Component) e.getSource();
             currentFrame = (JFrame) SwingUtilities.getRoot(component);
-            
             int option = fileChooser.showOpenDialog(currentFrame);
             if(option == JFileChooser.APPROVE_OPTION){
                File file = fileChooser.getSelectedFile();
-               currentFrame.getContentPane().add(compressionLabel);
+               
                setExtention(file);
                try {
             	   if(extention.equals("txt"))
@@ -129,9 +149,9 @@ public class huffmanPanel extends JPanel{
             }else{
             	uploadFile.setText("Open command canceled");
             }
-            compressionLabel.setText("All Done!");
+            
             repaint();
-         }
+        }
 
 		private void compressOtherExtentions(File file) throws IOException {
 			
@@ -213,7 +233,6 @@ public class huffmanPanel extends JPanel{
             int option = fileChooser.showOpenDialog(currentFrame);
             if(option == JFileChooser.APPROVE_OPTION){
                File file = fileChooser.getSelectedFile();
-               currentFrame.getContentPane().add(decompressionLabel);
                try {
             	   if(!extention.equals("txt")) {
             		   decompressOtherExtentions(file);
@@ -227,7 +246,6 @@ public class huffmanPanel extends JPanel{
             }else{
             	downloadFile.setText("Open command canceled");
             }
-            decompressionLabel.setText("All Done!");
             repaint();
          }
 

@@ -6,6 +6,7 @@ public class LZWCompression {
 
     public static List<Integer> compress(String uncompressed) {
         int dictSize = 256;
+        int cnt = 0;
         Map<String,Integer> dictionary = new HashMap<String,Integer>();
         for (int i = 0; i < 256; i++)
             dictionary.put("" + (char)i, i);
@@ -13,6 +14,10 @@ public class LZWCompression {
         String w = "";
         List<Integer> result = new ArrayList<Integer>();
         for (char c : uncompressed.toCharArray()) {
+        	cnt++;
+        	if(cnt%10000 == 0) {
+        		System.out.println("Still going on: " + cnt + " Total Length: " + uncompressed.toCharArray().length);
+        	}
             String wc = w + c;
             if (dictionary.containsKey(wc))
                 w = wc;

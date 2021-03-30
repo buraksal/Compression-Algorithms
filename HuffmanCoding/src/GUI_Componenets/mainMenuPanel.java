@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,9 +18,12 @@ public class mainMenuPanel extends JPanel{
 	JFrame currentFrame;
 	
 	JLabel title;
+	JLabel bgImage;
+	JLabel footer;
 	
 	JButton lzwButton;
 	JButton huffmanButton;
+	
 	
 	final static int HEIGHT = 540;
 	final static int WIDTH = 960;
@@ -27,6 +31,8 @@ public class mainMenuPanel extends JPanel{
 	final int BUTTON_HEIGHT = 75;
 	final int DISTANCE_BETWEEN_BUTTONS = 125;
 	final int FONT_SIZE = 35;
+	final int BUTTON_FONT_SIZE = 15;
+	final int FOOTER_LOCX = 800;
 	
 	mainMenuButtonListener buttonListener;
 	
@@ -50,19 +56,42 @@ public class mainMenuPanel extends JPanel{
 		
 		title = new JLabel("Compression Algorithms");
 		title.setFont(new Font("Delta Ray", Font.PLAIN, FONT_SIZE));
-		title.setBounds(WIDTH / 2 - BUTTON_WIDTH / 2, 0, 600, 200);
+		title.setForeground(Color.RED);
+		title.setBounds(WIDTH / 2 - BUTTON_WIDTH / 2 - BUTTON_HEIGHT, 0, DISTANCE_BETWEEN_BUTTONS*4, DISTANCE_BETWEEN_BUTTONS + BUTTON_HEIGHT);
 		this.add(title);
+		
+		footer = new JLabel("by Burak SAL");
+		footer.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
+		footer.setForeground(Color.CYAN);
+		footer.setBounds(FOOTER_LOCX, (HEIGHT-DISTANCE_BETWEEN_BUTTONS) , BUTTON_WIDTH / 2, BUTTON_HEIGHT);
+		this.add(footer);
 		
 		lzwButton = new JButton("LZW Compression");
 		lzwButton.setBounds((WIDTH-BUTTON_WIDTH) / 2 ,(HEIGHT-BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+		lzwButton.setForeground(Color.PINK);
+		lzwButton.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
 		lzwButton.addActionListener(buttonListener);
+		lzwButton.setOpaque(false);
+		lzwButton.setContentAreaFilled(false);
+		lzwButton.setBorderPainted(false);
 		this.add(lzwButton);
 		
 		huffmanButton = new JButton("Huffman Compression");
 		huffmanButton.setBounds((WIDTH-BUTTON_WIDTH) / 2, (HEIGHT-BUTTON_HEIGHT) / 2 + DISTANCE_BETWEEN_BUTTONS, BUTTON_WIDTH, BUTTON_HEIGHT);
+		huffmanButton.setForeground(Color.PINK);
+		huffmanButton.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
 		huffmanButton.addActionListener(buttonListener);
+		huffmanButton.setOpaque(false);
+		huffmanButton.setContentAreaFilled(false);
+		huffmanButton.setBorderPainted(false);
 		this.add(huffmanButton);
 				
+		bgImage = new JLabel(new ImageIcon("C:\\Users\\Burak\\git\\HuffmanCoding\\HuffmanCoding\\resources\\UnCompressedScrew.jpg"));
+		bgImage.setBounds(0,0, WIDTH,HEIGHT);
+		this.add(bgImage);
+		
+		
+
 		repaint();
 	}
 	
@@ -76,11 +105,8 @@ public class mainMenuPanel extends JPanel{
 				return;
 			} else if(e.getSource() == huffmanButton);{
 				new huffmanPanel(currentFrame);
-			}
-				
+			}	
 		}
-
-		
 	}
 	
 }

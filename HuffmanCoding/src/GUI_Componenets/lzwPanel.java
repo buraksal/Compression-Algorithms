@@ -1,5 +1,6 @@
 package GUI_Componenets;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -28,11 +30,13 @@ import Compressions.LZWCompression;
 
 public class lzwPanel extends JPanel{
 	
-	ArrayList<String> picExtentions = new ArrayList<>(Arrays.asList("png", "jpg", "bmp", "gif", "jpeg"));
+	ArrayList<String> picExtentions = new ArrayList<>(Arrays.asList("png", "jpg", "bmp", "gif", "jpeg", "mp4"));
 	
 	JFrame currentFrame;
 	
 	JLabel lzwTitle;
+	JLabel bgImage;
+	JLabel footer;
 	
 	JButton uploadFile;
 	JButton downloadFile;
@@ -52,6 +56,8 @@ public class lzwPanel extends JPanel{
 	final int FONT_SIZE = 45;
 	final int SIZE_ADJUSTMENT_RATE = 5;
 	final int FONT_SIZE_ADJUSTMENT = 5;
+	final int BUTTON_FONT_SIZE = 15;
+	final int FOOTER_LOCX = 800;
 	
 	public lzwPanel(JFrame currentFrame) {
 		currentFrame.setContentPane(this);
@@ -65,26 +71,51 @@ public class lzwPanel extends JPanel{
 		
 		lzwTitle = new JLabel ("lzw Compression");
 		lzwTitle.setFont(new Font("Delta Ray", Font.PLAIN, FONT_SIZE));
+		lzwTitle.setForeground(Color.RED);
 		lzwTitle.setBounds(DISTANCE_BETWEEN_BUTTONS/ SIZE_ADJUSTMENT_RATE, DISTANCE_BETWEEN_BUTTONS/ SIZE_ADJUSTMENT_RATE - 50, 
 				FONT_SIZE * (FONT_SIZE_ADJUSTMENT * SIZE_ADJUSTMENT_RATE), FONT_SIZE* FONT_SIZE_ADJUSTMENT);		
 		this.add(lzwTitle);
 		
+		footer = new JLabel("by Burak SAL");
+		footer.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
+		footer.setForeground(Color.CYAN);
+		footer.setBounds(FOOTER_LOCX, (HEIGHT-DISTANCE_BETWEEN_BUTTONS) , BUTTON_WIDTH / 2, BUTTON_HEIGHT);
+		this.add(footer);
+		
 		uploadFile = new JButton("Select a File to Compress!");
 		uploadFile.setBounds((lzwTitle.getX() + BUTTON_WIDTH) / 2, lzwTitle.getY() - DISTANCE_BETWEEN_BUTTONS + (BUTTON_HEIGHT*SIZE_ADJUSTMENT_RATE)
 				, BUTTON_WIDTH, BUTTON_HEIGHT);
+		uploadFile.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
+		uploadFile.setForeground(Color.PINK);
 		uploadFile.addActionListener(new UploadButtonListener());
+		uploadFile.setOpaque(false);
+		uploadFile.setContentAreaFilled(false);
+		uploadFile.setBorderPainted(false);
 		this.add(uploadFile);
 		
 		downloadFile = new JButton("Select a File to Decompress!");
 		downloadFile.setBounds((lzwTitle.getX() + BUTTON_WIDTH) / 2, lzwTitle.getY()  + (BUTTON_HEIGHT*SIZE_ADJUSTMENT_RATE)
 				, BUTTON_WIDTH, BUTTON_HEIGHT);
+		downloadFile.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
+		downloadFile.setForeground(Color.PINK);
 		downloadFile.addActionListener(new DownloadButtonListener());
+		downloadFile.setOpaque(false);
+		downloadFile.setContentAreaFilled(false);
+		downloadFile.setBorderPainted(false);
 		this.add(downloadFile);
 		
 		backButton = new JButton(" < Back");
 		backButton.setBounds(WIDTH - 150, 50, 100, 50);
+		backButton.setForeground(Color.PINK);
 		backButton.addActionListener(new backButtonListener());
+		backButton.setOpaque(false);
+		backButton.setContentAreaFilled(false);
+		backButton.setBorderPainted(false);
 		this.add(backButton);
+		
+		bgImage = new JLabel(new ImageIcon("C:\\Users\\Burak\\git\\HuffmanCoding\\HuffmanCoding\\resources\\CompressedScrew.jpg"));
+		bgImage.setBounds(0,0, WIDTH,HEIGHT);
+		this.add(bgImage);
 		
 		repaint();
 	}
@@ -101,11 +132,9 @@ public class lzwPanel extends JPanel{
                setExtention(file);
                try {
             	   if(extention.equals("txt")) {
-            		   System.out.println("here-1");
             		   compressFile(file);
             	   }            		   
             	   else {
-            		   System.out.println("here-1.5");
             		   compressOtherExtention(file);
             	   }
             		   
@@ -131,10 +160,12 @@ public class lzwPanel extends JPanel{
 				LZWCompression lzw = new LZWCompression();
 				String fileName = setPathExtention(file);
 				FileWriter writer = new FileWriter(fileName, true);
+				System.out.println("Here");
 				writer.append("");
 				//writer = new FileWriter(str, true);
 				compressed = lzw.compress(str);
 				writeToFile(compressed, file, writer);
+				System.out.println("Done!");
 			}
 			
 		}
@@ -176,7 +207,6 @@ public class lzwPanel extends JPanel{
 			FileWriter writer = new FileWriter(str, true);
 			writer.append("");
 			//writer = new FileWriter(str, true);
-			System.out.println("here0");
 			String data;
 			data = reader.next();
 			compressed = lzw.compress(data);
