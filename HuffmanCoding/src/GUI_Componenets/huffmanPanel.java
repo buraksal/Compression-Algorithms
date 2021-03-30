@@ -119,7 +119,7 @@ public class huffmanPanel extends JPanel{
 		backButton.setBorderPainted(false);
 		this.add(backButton);
 		
-		bgImage = new JLabel(new ImageIcon("C:\\Users\\Burak\\git\\HuffmanCoding\\HuffmanCoding\\resources\\CompressedScrew.jpg"));
+		bgImage = new JLabel(new ImageIcon("resources\\CompressedScrew.jpg"));
 		bgImage.setBounds(0,0, WIDTH,HEIGHT);
 		this.add(bgImage);
 		

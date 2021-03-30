@@ -86,7 +86,7 @@ public class mainMenuPanel extends JPanel{
 		huffmanButton.setBorderPainted(false);
 		this.add(huffmanButton);
 				
-		bgImage = new JLabel(new ImageIcon("C:\\Users\\Burak\\git\\HuffmanCoding\\HuffmanCoding\\resources\\UnCompressedScrew.jpg"));
+		bgImage = new JLabel(new ImageIcon("resources\\UnCompressedScrew.jpg"));
 		bgImage.setBounds(0,0, WIDTH,HEIGHT);
 		this.add(bgImage);
 		
