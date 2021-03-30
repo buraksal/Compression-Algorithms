@@ -29,23 +29,23 @@ import Compressions.HuffmanTree;
 import Compressions.HuffmanTree.HuffmanTreeNode;
 
 public class huffmanPanel extends JPanel{
-	
+
 	ArrayList<String> picExtentions = new ArrayList<>(Arrays.asList("png", "jpg", "bmp", "gif", "jpeg", "mp4"));
-	
+
 	JFrame currentFrame;
-	
+
 	JLabel huffmanTitle;
 	JLabel bgImage;
 	JLabel footer;
-	
+
 	JButton uploadFile;
 	JButton downloadFile;
 	JButton backButton;
-	
+
 	HuffmanTreeNode root;
-	
+
 	String extention;
-	
+
 	byte[] bytes;
 
 	final static int HEIGHT = 540;
@@ -63,7 +63,7 @@ public class huffmanPanel extends JPanel{
 	final int SPEED = 500;
 	final int BUTTON_FONT_SIZE = 15;
 	final int FOOTER_LOCX = 800;
-	
+
 	public huffmanPanel(JFrame currentFrame) {
 		currentFrame.setContentPane(this);
 		initialize(currentFrame);
@@ -73,20 +73,23 @@ public class huffmanPanel extends JPanel{
 		this.removeAll();
 		this.setBounds(0,0,WIDTH, HEIGHT);
 		this.setLayout(null);
-		
+
+		//Adding main title
 		huffmanTitle = new JLabel ("huffman Compression");
 		huffmanTitle.setFont(new Font("Delta Ray", Font.PLAIN, FONT_SIZE));
 		huffmanTitle.setForeground(Color.RED);
 		huffmanTitle.setBounds(DISTANCE_BETWEEN_BUTTONS/ SIZE_ADJUSTMENT_RATE, DISTANCE_BETWEEN_BUTTONS/ SIZE_ADJUSTMENT_RATE - 50, 
 				FONT_SIZE * (FONT_SIZE_ADJUSTMENT * SIZE_ADJUSTMENT_RATE), FONT_SIZE* FONT_SIZE_ADJUSTMENT);		
 		this.add(huffmanTitle);
-		
+
+		//Adding footer to panel
 		footer = new JLabel("by Burak SAL");
 		footer.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
 		footer.setForeground(Color.CYAN);
 		footer.setBounds(FOOTER_LOCX, (HEIGHT-DISTANCE_BETWEEN_BUTTONS) , BUTTON_WIDTH / 2, BUTTON_HEIGHT);
 		this.add(footer);
-		
+
+		//Adding file chooser button to panel for compression
 		uploadFile = new JButton("Select a File to Compress!");
 		uploadFile.setBounds((huffmanTitle.getX() + BUTTON_WIDTH) / 2, huffmanTitle.getY() - DISTANCE_BETWEEN_BUTTONS + (BUTTON_HEIGHT*SIZE_ADJUSTMENT_RATE)
 				, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -97,7 +100,8 @@ public class huffmanPanel extends JPanel{
 		uploadFile.setContentAreaFilled(false);
 		uploadFile.setBorderPainted(false);
 		this.add(uploadFile);
-		
+
+		//Adding file chooser button to panel for decompression
 		downloadFile = new JButton("Select a File to Decompress!");
 		downloadFile.setBounds((huffmanTitle.getX() + BUTTON_WIDTH) / 2, huffmanTitle.getY()  + (BUTTON_HEIGHT*SIZE_ADJUSTMENT_RATE)
 				, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -108,7 +112,8 @@ public class huffmanPanel extends JPanel{
 		downloadFile.setContentAreaFilled(false);
 		downloadFile.setBorderPainted(false);
 		this.add(downloadFile);
-		
+
+		//Adding back button to return to main screeen
 		backButton = new JButton(" < Back");
 		backButton.setBounds(WIDTH - (BUTTON_WIDTH / 2), DISTANCE_BETWEEN_BUTTONS - BUTTON_HEIGHT, 100, 50);
 		backButton.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
@@ -118,48 +123,50 @@ public class huffmanPanel extends JPanel{
 		backButton.setContentAreaFilled(false);
 		backButton.setBorderPainted(false);
 		this.add(backButton);
-		
+
+		//Adding background image to the panel
 		bgImage = new JLabel(new ImageIcon("resources\\CompressedScrew.jpg"));
 		bgImage.setBounds(0,0, WIDTH,HEIGHT);
 		this.add(bgImage);
-		
+
 		repaint();
 	}
-	
+
 	class UploadButtonListener implements ActionListener{
+		//Gets the file and does the compression
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser fileChooser = new JFileChooser();
-            Component component = (Component) e.getSource();
-            currentFrame = (JFrame) SwingUtilities.getRoot(component);
-            int option = fileChooser.showOpenDialog(currentFrame);
-            if(option == JFileChooser.APPROVE_OPTION){
-               File file = fileChooser.getSelectedFile();
-               
-               setExtention(file);
-               try {
-            	   if(extention.equals("txt"))
-            		   compressFile(file);
-            	   else
-            		   compressOtherExtentions(file);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			Component component = (Component) e.getSource();
+			currentFrame = (JFrame) SwingUtilities.getRoot(component);
+			int option = fileChooser.showOpenDialog(currentFrame);
+			if(option == JFileChooser.APPROVE_OPTION){
+				File file = fileChooser.getSelectedFile();
+				setExtention(file);
+				try {
+					if(extention.equals("txt"))
+						compressFile(file);
+					else
+						compressOtherExtentions(file);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				uploadFile.setText("Folder Selected: " + file.getName());
+			}else{
+				uploadFile.setText("Open command canceled");
 			}
-               uploadFile.setText("Folder Selected: " + file.getName());
-            }else{
-            	uploadFile.setText("Open command canceled");
-            }
-            
-            repaint();
-        }
 
+			repaint();
+		}
+
+		//Compresses the files with other extentions than txt
 		private void compressOtherExtentions(File file) throws IOException {
-			
+
 			if(picExtentions.contains(extention)) {
 				byte[] data2 = new byte[(int) file.length()];
-			    FileInputStream in = new FileInputStream(file);
-			    in.read(data2);
-			    in.close();
+				FileInputStream in = new FileInputStream(file);
+				in.read(data2);
+				in.close();
 				bytes = data2;
 				String str = imageToText(file);
 				str = str.replace("[", "");
@@ -172,6 +179,7 @@ public class huffmanPanel extends JPanel{
 			}
 		}
 
+		//Compresses txt files
 		private void compressFile(File file) throws IOException {
 			Scanner reader = new Scanner(file);
 			String data;
@@ -185,20 +193,22 @@ public class huffmanPanel extends JPanel{
 
 		}
 
+		//Writes output to txt file
 		private void writeToFile(File file, String data, FileWriter writer) {
 			root = HuffmanTree.createTree(data);
 			HuffmanTree.createCode(root, "");
 			String encodedStr = HuffmanTree.encode(root, data);
 			try {
 				writer.write(encodedStr+"\n");
-	        	writer.close();
-		    } catch (IOException e) {
-		    	System.out.println("An error occurred.");
-		    	e.printStackTrace();
-		    }
+				writer.close();
+			} catch (IOException e) {
+				System.out.println("An error occurred.");
+				e.printStackTrace();
+			}
 			System.out.println("Done!");
 		}
 
+		//Sets the file to be created's name
 		private String setFileName(File file) {
 			String str1 = file.getPath();
 			int loc = str1.lastIndexOf('\\');
@@ -209,46 +219,50 @@ public class huffmanPanel extends JPanel{
 			String str = str1 + "huffmanCompression_" + str2 + "txt";
 			return str;
 		}
-		
+
+		//Sets the extention as global to be reached later
 		private void setExtention(File file) {
 			String fileExtention = file.getName();
 			int loc = fileExtention.lastIndexOf('.');
 			fileExtention = fileExtention.substring(loc + 1);
 			extention = fileExtention;
 		}
-		
+
+		//Returns the byte array as string
 		private String imageToText(File file) throws IOException {
 			String str = "";
 			str = Arrays.toString(bytes);
 			return str;
 		}
 	}
-	
+
 	class DownloadButtonListener implements ActionListener{
+		//Gets the file and does the decompression
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser fileChooser = new JFileChooser();
-            Component component = (Component) e.getSource();
-            currentFrame = (JFrame) SwingUtilities.getRoot(component);
-            int option = fileChooser.showOpenDialog(currentFrame);
-            if(option == JFileChooser.APPROVE_OPTION){
-               File file = fileChooser.getSelectedFile();
-               try {
-            	   if(!extention.equals("txt")) {
-            		   decompressOtherExtentions(file);
-            	   } else {
-            		   decompress(file);
-            	   }
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			Component component = (Component) e.getSource();
+			currentFrame = (JFrame) SwingUtilities.getRoot(component);
+			int option = fileChooser.showOpenDialog(currentFrame);
+			if(option == JFileChooser.APPROVE_OPTION){
+				File file = fileChooser.getSelectedFile();
+				try {
+					if(!extention.equals("txt")) {
+						decompressOtherExtentions(file);
+					} else {
+						decompress(file);
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				downloadFile.setText("Folder Selected: " + file.getName());
+			}else{
+				downloadFile.setText("Open command canceled");
 			}
-               downloadFile.setText("Folder Selected: " + file.getName());
-            }else{
-            	downloadFile.setText("Open command canceled");
-            }
-            repaint();
-         }
+			repaint();
+		}
 
+		//Does the decompression for files with other extentions than txt
 		private void decompressOtherExtentions(File file) throws IOException {
 			Scanner reader = new Scanner(file);
 			String data;
@@ -261,23 +275,24 @@ public class huffmanPanel extends JPanel{
 			String[] input = decodedStr.replaceAll("[\\[\\]]", "").split(", ");
 			System.out.println("Boom Now We are here!");
 			byte[] output = new byte[decodedStr.length()];
-			
-			for (int i = 0; i < input.length; i++) {
-		        output[i] = Byte.parseByte(input[i]);
-		        if(i % 5000 == 0)
-		        System.out.println("Total length is: " + input.length + " we are at: " + i);
-		    }
 
-		    if(picExtentions.contains(extention)) {
-		    	ByteArrayInputStream bis = new ByteArrayInputStream(output);
-			    BufferedImage image = ImageIO.read(bis);
-			    String currentPath = setFileName(file);
-			    ImageIO.write(image, extention,  new File(currentPath) );
-			    System.out.println("Done!");
-		    }
-			
+			for (int i = 0; i < input.length; i++) {
+				output[i] = Byte.parseByte(input[i]);
+				if(i % 5000 == 0)
+					System.out.println("Total length is: " + input.length + " we are at: " + i);
+			}
+
+			if(picExtentions.contains(extention)) {
+				ByteArrayInputStream bis = new ByteArrayInputStream(output);
+				BufferedImage image = ImageIO.read(bis);
+				String currentPath = setFileName(file);
+				ImageIO.write(image, extention,  new File(currentPath) );
+				System.out.println("Done!");
+			}
+
 		}
 
+		//Does the decompression for files with txt extention
 		private void decompress(File file) throws IOException {
 			Scanner reader = new Scanner(file);
 			String data;
@@ -288,17 +303,19 @@ public class huffmanPanel extends JPanel{
 			writeToFile(file, data, writer);
 		}
 
+		//Writes the decompressed version to a file
 		private void writeToFile(File file, String data, FileWriter writer) {
 			String decodedStr = HuffmanTree.decode(root, data);
 			try {
 				writer.write(decodedStr+ "\n");
-	        	writer.close();
-		    } catch (IOException e) {
-		    	System.out.println("An error occurred.");
-		    	e.printStackTrace();
-		    }
+				writer.close();
+			} catch (IOException e) {
+				System.out.println("An error occurred.");
+				e.printStackTrace();
+			}
 		}
 
+		//Sets the name of the decompressed file
 		private String setFileName(File file) {
 			String fileName = file.getAbsolutePath();
 			int loc = fileName.lastIndexOf('.');
@@ -307,20 +324,21 @@ public class huffmanPanel extends JPanel{
 			fileName = fileName.replace("Compression", "Decompression");
 			return fileName;
 		}
-		
+
 	}
-	
+
 	class backButtonListener implements ActionListener {
+		//Navigates to the main menu
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+
 			Component component = (Component) e.getSource();
 			currentFrame = (JFrame) SwingUtilities.getRoot(component);
 			if (e.getSource() == backButton){
 				new mainMenuPanel(currentFrame);
 			}
 		}
-		
+
 	}
-	
+
 }

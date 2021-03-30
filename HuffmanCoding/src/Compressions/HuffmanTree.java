@@ -1,7 +1,7 @@
 package Compressions;
 
 public class HuffmanTree {
-	
+
 	public static class HuffmanTreeNode {
 		int freq;
 		char data;
@@ -9,35 +9,37 @@ public class HuffmanTree {
 		HuffmanTreeNode left;
 		HuffmanTreeNode right;
 		
+		//Finds the node with given data recursively
 		public HuffmanTreeNode findNode(HuffmanTreeNode root, char data){
 			HuffmanTreeNode toFind = new HuffmanTreeNode();
 			if (root == null) 
 				return toFind;
-		 
-		    if (root.data == data) {
-		    	toFind = root; 
-		    	return toFind;
-		    }
-		        
-		    toFind = findNode(root.left, data); 
-		    if(toFind.code != null) {
-		    	return toFind;
-		    }
-		    toFind = findNode(root.right, data); 
-			
+
+			if (root.data == data) {
+				toFind = root; 
+				return toFind;
+			}
+
+			toFind = findNode(root.left, data); 
+			if(toFind.code != null) {
+				return toFind;
+			}
+			toFind = findNode(root.right, data); 
+
 			return toFind;
 		}
 	}
-	
-	public HuffmanTree() {
-		
-	}
 
+	public HuffmanTree() {
+
+	}
+	
+	//Creates the codes for the nodes
 	public static void createCode(HuffmanTreeNode root, String code) {
 		if (root.left == null && root.right == null) {
-            //System.out.println(root.data + ":" + code);
-            root.code = code;
-            return;
+			//System.out.println(root.data + ":" + code);
+			root.code = code;
+			return;
 		}
 		if(root.left != null)
 			createCode(root.left, code + "0");
@@ -45,7 +47,7 @@ public class HuffmanTree {
 			createCode(root.right, code + "1");
 	}
 
-
+	//Creates huffman tree according to frequencies
 	public static HuffmanTreeNode createTree(String str) {	
 		FrequencyChecker hfc = new FrequencyChecker();
 		hfc.checkFrequency(str);
@@ -58,9 +60,9 @@ public class HuffmanTree {
 			htn.right = null;
 			pq.insert(htn);
 		}
-		
+
 		HuffmanTreeNode root = null;
-		
+
 		while(pq.getElementNum() > 1) {
 			HuffmanTreeNode node1 = pq.peek();
 			pq.removeFirst();
@@ -76,19 +78,7 @@ public class HuffmanTree {
 		return root;
 	}
 	
-	
-	public static void main(String[] args) {
-		String str = "asdasdfnbsafcwemrwecwecfhwemgceyERMCEBNVFGEDSWMTYRWatghwjen "
-				+ "sbahymtaWFAEHAYTCTEaeeem<whrcWGHMCAREHYGMACHQMGTCQEYERGRHECTQEW"
-				+ "FHAYTCTEaeeem<whrcWGHMCAREHYMCAREHYGMACHQMGTCQEYERGRHECTQEWFH";
-		HuffmanTreeNode root = createTree(str);
-		createCode(root,"");
-		String encodedStr = encode(root, str);
-		System.out.println("Encoding: " + encodedStr);
-		String decodedStr = decode(root, encodedStr);
-		System.out.println("Decoding: " + decodedStr);
-	}
-
+	//Decodes the encoded message
 	public static String decode(HuffmanTreeNode root, String encodedStr) {
 		String str = "";
 		HuffmanTreeNode newNode = new HuffmanTreeNode();
@@ -98,7 +88,7 @@ public class HuffmanTree {
 				str += newNode.data;
 				newNode = root;
 			}
-			
+
 			if(encodedStr.charAt(i) == '0' && newNode.left != null) {
 				newNode = newNode.left;
 			}
@@ -108,7 +98,8 @@ public class HuffmanTree {
 		}
 		return str;
 	}
-
+	
+	//Encodes the given string
 	public static String encode(HuffmanTreeNode root, String str) {
 		HuffmanTreeNode newNode = new HuffmanTreeNode();
 		String encodedStr = "";
@@ -121,5 +112,5 @@ public class HuffmanTree {
 		}
 		return encodedStr;
 	}
-	
+
 }
