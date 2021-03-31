@@ -25,5 +25,4 @@ public class compressionFrame extends JFrame{
 		new mainMenuPanel(compressionFrame);
 
 	}
-
 }

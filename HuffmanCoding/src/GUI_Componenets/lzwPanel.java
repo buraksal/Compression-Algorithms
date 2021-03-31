@@ -111,6 +111,7 @@ public class lzwPanel extends JPanel{
 		//Adding back button to return to main screeen
 		backButton = new JButton(" < Back");
 		backButton.setBounds(WIDTH - 150, 50, 100, 50);
+		backButton.setFont(new Font("Delta Ray", Font.PLAIN, BUTTON_FONT_SIZE));
 		backButton.setForeground(Color.PINK);
 		backButton.addActionListener(new backButtonListener());
 		backButton.setOpaque(false);
@@ -170,7 +171,6 @@ public class lzwPanel extends JPanel{
 				FileWriter writer = new FileWriter(fileName, true);
 				System.out.println("Here");
 				writer.append("");
-				//writer = new FileWriter(str, true);
 				compressed = lzw.compress(str);
 				writeToFile(compressed, file, writer);
 				System.out.println("Done!");
@@ -250,7 +250,6 @@ public class lzwPanel extends JPanel{
 				try {
 					if(!extention.equals("txt")) {
 						decompressOtherExtentions(file);
-						//changeFileExtention(file);
 					} else {
 						decompressFile(file);
 					}
